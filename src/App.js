@@ -7,7 +7,35 @@ import SearchPage from './pages/SearchPage';
 import './App.css'
 
 class BooksApp extends React.Component {
+  state = {
+    books: [],
+    loading: true
+  }
+
+  componentDidMount() {
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books, loading: false })
+    })
+  }
+
+  moveTo = (book) => {
+    BooksAPI.update(book, book.shelf)
+    .then((result) => {
+      this.setState((currentState) => ({
+        books: currentState.books.filter((obj) => obj.id !== book.id)
+      }))
+
+      if (book.shelf !== 'none')
+        this.setState((currentState) => ({
+          books: currentState.books.concat([book])
+        }))
+    })
+  }
+
   render() {
+    if (this.state.loading) 
+      return <Loader />
+      
     return (
       <div className="app">
           <Route exact path='/' render={() =>(
