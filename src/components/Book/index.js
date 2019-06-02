@@ -19,15 +19,20 @@ class Book extends Component {
     render() {
 
         const { title, authors, imageLinks } = this.props.book
-        const smallThumbnail = imageLinks ? imageLinks.smallThumbnail : ''
+        const cover = imageLinks ? imageLinks.smallThumbnail : ''
 
 
         return (
             <li>
                 <div className="book">
                     <div className="book-top">
-                        <div className="book-cover fade" style={{ width: 128, height: 193, backgroundImage: `url(${smallThumbnail})` }}></div>
-                    
+                        <div className="book-cover">
+                        {cover !== '' ? (
+                            <img src={cover} alt={title}/>
+                        ) : (
+                            <img src={require('../../images/no-cover.jpg')} alt={title}/>
+                        )}
+                        </div>          
                     </div>
                     <div className="book-title">{title}</div>
                     <div className="book-authors">{authors}</div>
