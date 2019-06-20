@@ -8,7 +8,7 @@ It's a bookshelf application, you can select and sort the books you've read, are
 
 ## Online version
 
-<!-- [click here](https://carollaginestra.github.io/react-map/) -->
+[click here](https://carollaginestra.github.io/MyReads/)
 
 ## Installing
 
