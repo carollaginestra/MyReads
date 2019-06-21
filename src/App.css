@@ -226,11 +226,11 @@ a:active {
   max-width: 100%;
 }
 
-.no-result {
-  text-align: center;
+.result {
+  padding: 10px 15px;
 }
 
-.no-result span {
+.result span {
   font-size: 2em;
   font-weight: bold;
 }
