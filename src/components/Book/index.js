@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-
 class Book extends Component {
 
     static propTypes = {
@@ -9,15 +8,14 @@ class Book extends Component {
         moveTo: PropTypes.func.isRequired,
     }
 
-    options = [
+    shelfOptions = [
         { key: 'currentlyReading', title: 'Currently Reading' },
         { key: 'wantToRead', title: 'Want to Read' },
         { key: 'read', title: 'Read' },
         { key: 'none', title: 'None' }
     ]
 
-     // when the user select a option to change the shelf
-    handleShelf = (event) => {
+    updateShelf = (event) => {
         event.preventDefault()
         const { book } = this.props
         book.shelf = event.target.value
@@ -28,8 +26,7 @@ class Book extends Component {
     render() {
 
         const { title, authors, imageLinks, shelf } = this.props.book
-        const cover = imageLinks ? imageLinks.smallThumbnail : ''
-
+        const cover = imageLinks ? imageLinks.thumbnail : ''
 
         return (
             <li>
@@ -43,9 +40,9 @@ class Book extends Component {
                         )}
                         </div>     
                         <div className="book-shelf-changer">
-                            <select value={shelf} onChange={this.handleShelf} >
+                            <select value={shelf} onChange={this.updateShelf} >
                                 <option value="disabled" disabled>Move to...</option>
-                                {this.options.map(({ key, title }) => (
+                                {this.shelfOptions.map(({ key, title }) => (
                                     <option key={key} value={key}>{title}</option>
                                 ))}
                             </select>

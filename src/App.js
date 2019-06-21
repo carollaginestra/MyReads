@@ -9,18 +9,18 @@ import './App.css'
 class BooksApp extends React.Component {
   state = {
     books: [],
-    loading: true
+    loading: false
   }
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      this.setState({ books, loading: false })
+      this.setState({ books, loading: true })
     })
   }
 
   moveTo = (book) => {
     BooksAPI.update(book, book.shelf)
-    .then((result) => {
+    .then(() => {
       this.setState((currentState) => ({
         books: currentState.books.filter((obj) => obj.id !== book.id)
       }))
@@ -33,20 +33,27 @@ class BooksApp extends React.Component {
   }
 
   render() {
-    if (this.state.loading) 
+    if (this.state.loading === false) { 
       return <Loader />
-      
-    return (
-      <div className="app">
-          <Route exact path='/' render={() =>(
-            <MainPage books={this.state.books}/>
-          )}/>
-          
-          <Route path='/search' render={() =>(
-            <SearchPage books={this.state.books}  moveTo={this.moveTo}/>
-          )}/>
-      </div>
-    )
+    } else {
+      return (
+        <div className="app">
+            <Route exact path='/' render={() =>(
+              <MainPage
+                books={this.state.books}
+                moveTo={this.moveTo}
+              />
+            )}/>
+            
+            <Route path='/search' render={() =>(
+              <SearchPage
+                books={this.state.books}
+                moveTo={this.moveTo}
+              />
+            )}/>
+        </div>
+      )
+    }
   }
 }
 
