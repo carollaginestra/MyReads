@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import Book from '../../components/Book/index'
 import * as BooksAPI from '../../utils/BooksAPI'
+import Loader from '../../components/Loader'
 
 class SearchPage extends React.Component {
     static propTypes = {
@@ -12,13 +13,13 @@ class SearchPage extends React.Component {
 
     state = {
         query: '',
-        books: this.props.books
+        books: [],
+        loading: false,
     }
-    
 
     updateQuery = (query) => {
         query = query.trim()
-        this.setState({query})
+        this.setState({query, loading: true})
 
         BooksAPI.search(query).then((books) => {
             if (books.error)
@@ -32,7 +33,8 @@ class SearchPage extends React.Component {
                 })
         }).then((books) => {
             this.setState(() => ({
-                books
+                books,
+                loading: false,
             }))
         }).catch(() => {
             this.clearQuery();
@@ -40,11 +42,11 @@ class SearchPage extends React.Component {
     }
 
     clearQuery = () => {
-        this.setState({ books: [] }) //make the list empty
+        this.setState({ books: [], loading: false }) //make the list empty
     }
 
     render() {
-        const { books } = this.state
+        const { books, loading } = this.state
         const { moveTo } = this.props
 
         return(
@@ -56,16 +58,30 @@ class SearchPage extends React.Component {
                             onChange={(event) => this.updateQuery(event.target.value)}/>
                     </div>
                 </div>
+
+
                 <div className="search-books-results">
+
+                    {loading && (
+                        <Loader />
+                    )}
+
+
                     {books.length > 0 ? (
-                        <ol className="books-grid">
-                            {books.map((book) => (
-                                <Book key={book.id} book={book} moveTo={moveTo}/>
-                            ))}
-                        </ol>
-                    ) : ( //if there aren't search results
-                        <div className="no-result">
-                            <span>No books found</span>
+                        <div>
+                            <div className="result">
+                                <b>{books.length}</b> results found.
+                            </div>
+
+                            <ol className="books-grid">
+                                {books.map((book) => (
+                                    <Book key={book.id} book={book} moveTo={moveTo}/>
+                                ))}
+                            </ol>
+                        </div>
+                    ): (
+                        <div className="results">
+                            <b>{books.length}</b> results found.
 
                             <p>You can try searching for:</p>
                             <p>
@@ -80,7 +96,9 @@ class SearchPage extends React.Component {
                                 'Tolstoy', 'Travel', 'Ultimate', 'Virtual Reality', 'Web Development', 'iOS'
                             </p>
                         </div>
-                    )}
+                    )             
+                    }
+
                 </div>
             </div>
         )
